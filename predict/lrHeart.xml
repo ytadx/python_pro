@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="JPMML-SkLearn" version="1.6.27"/>
+		<Timestamp>2021-08-30T13:32:48Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension name="repr">PMMLPipeline(steps=[('mapper', DataFrameMapper(drop_cols=[],
+                features=[(['sbp'], MinMaxScaler()),
+                          (['tobacco'], MinMaxScaler()), ('ldl', None),
+                          ('adiposity', None), (['famhist'], LabelBinarizer()),
+                          ('typea', None), ('obesity', None), ('alcohol', None),
+                          (['age'], FunctionTransformer(func=&lt;ufunc 'log'&gt;))])),
+       ('classifier', LinearRegression())])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="chd" optype="continuous" dataType="double"/>
+		<DataField name="sbp" optype="continuous" dataType="double"/>
+		<DataField name="tobacco" optype="continuous" dataType="double"/>
+		<DataField name="ldl" optype="continuous" dataType="double"/>
+		<DataField name="adiposity" optype="continuous" dataType="double"/>
+		<DataField name="famhist" optype="categorical" dataType="string">
+			<Value value="Absent"/>
+			<Value value="Present"/>
+		</DataField>
+		<DataField name="typea" optype="continuous" dataType="double"/>
+		<DataField name="obesity" optype="continuous" dataType="double"/>
+		<DataField name="alcohol" optype="continuous" dataType="double"/>
+		<DataField name="age" optype="continuous" dataType="double"/>
+	</DataDictionary>
+	<RegressionModel functionName="regression" algorithmName="sklearn.linear_model._base.LinearRegression">
+		<MiningSchema>
+			<MiningField name="chd" usageType="target"/>
+			<MiningField name="ldl"/>
+			<MiningField name="adiposity"/>
+			<MiningField name="famhist"/>
+			<MiningField name="typea"/>
+			<MiningField name="obesity"/>
+			<MiningField name="alcohol"/>
+			<MiningField name="sbp"/>
+			<MiningField name="tobacco"/>
+			<MiningField name="age"/>
+		</MiningSchema>
+		<LocalTransformations>
+			<DerivedField name="minMaxScaler(sbp)" optype="continuous" dataType="double">
+				<Apply function="+">
+					<Apply function="*">
+						<FieldRef field="sbp"/>
+						<Constant dataType="double">0.010869565217391304</Constant>
+					</Apply>
+					<Constant dataType="double">-1.2391304347826086</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="minMaxScaler(tobacco)" optype="continuous" dataType="double">
+				<Apply function="*">
+					<FieldRef field="tobacco"/>
+					<Constant dataType="double">0.07092198581560284</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="log(age)" optype="continuous" dataType="double">
+				<Apply function="ln">
+					<FieldRef field="age"/>
+				</Apply>
+			</DerivedField>
+		</LocalTransformations>
+		<RegressionTable intercept="-10.828501228430971">
+			<NumericPredictor name="minMaxScaler(sbp)" coefficient="1.4162340088404255"/>
+			<NumericPredictor name="minMaxScaler(tobacco)" coefficient="1.7357830290109415"/>
+			<NumericPredictor name="ldl" coefficient="-0.26780897323938135"/>
+			<NumericPredictor name="adiposity" coefficient="-0.22626703221962274"/>
+			<NumericPredictor name="typea" coefficient="0.020588621931093065"/>
+			<NumericPredictor name="obesity" coefficient="0.531538812924494"/>
+			<NumericPredictor name="alcohol" coefficient="-0.006412826805251237"/>
+			<NumericPredictor name="log(age)" coefficient="0.602737497335877"/>
+			<CategoricalPredictor name="famhist" value="Present" coefficient="0.0754231877618643"/>
+		</RegressionTable>
+	</RegressionModel>
+</PMML>
